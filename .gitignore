@@ -1,0 +1,15 @@
+node_modules
+venv/
+.env
+__pycache__/
+*.pyc
+.DS_Store
+node_modules/
+dist/
+build/
+flask_session/
+dump.rdb
+migrations/
+venv310/
+venv/
+.venv/

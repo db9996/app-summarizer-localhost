@@ -1,0 +1,57 @@
+services:
+  db:
+    image: postgres:14
+    environment:
+      POSTGRES_DB: appsummarizer2
+      POSTGRES_USER: db9996
+      POSTGRES_PASSWORD: Devu2021
+    ports:
+      - "55432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7
+
+  backend:
+    build: ./backend
+    ports:
+      - "5001:5001"
+    depends_on:
+      - db
+      - redis
+    environment:
+      DATABASE_URL: postgresql://db9996:Devu2021@db:5432/appsummarizer2
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/0
+      FLASK_APP: app
+      FLASK_ENV: production
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY}
+      GOOGLE_OAUTH_CLIENT_ID: ${GOOGLE_OAUTH_CLIENT_ID}
+      GOOGLE_OAUTH_CLIENT_SECRET: ${GOOGLE_OAUTH_CLIENT_SECRET}
+    working_dir: /app
+
+  worker:
+    build: ./backend
+    command: celery -A tasks.celery worker --loglevel=info
+    depends_on:
+      - backend
+      - redis
+    environment:
+      DATABASE_URL: postgresql://db9996:Devu2021@db:5432/appsummarizer2
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/0
+      FLASK_APP: app
+      FLASK_ENV: production
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY}
+    working_dir: /app
+
+  frontend:
+    build: ./frontend-vite
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  pg_data:
