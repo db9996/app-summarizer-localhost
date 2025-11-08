@@ -102,7 +102,7 @@ google_bp = make_google_blueprint(
         "https://www.googleapis.com/auth/userinfo.email",
         "openid"
     ],
-    redirect_url="http://app-backend1.onrender.com/api/oauth/google/google/authorized"
+    redirect_url="https://app-backend1.onrender.com/api/oauth/google/google/authorized"
 )
 google_bp.authorization_url_params = {"prompt": "select_account"}
 

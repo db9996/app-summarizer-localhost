@@ -10,7 +10,7 @@ function Dashboard() {
 
     async function fetchProtectedData() {
       try {
-        const response = await axios.get("http://app-backend1.onrender.com/api/protected", {
+        const response = await axios.get("https://app-backend1.onrender.com/api/protected", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
