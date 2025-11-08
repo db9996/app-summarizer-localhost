@@ -21,5 +21,21 @@ build/
 dist/
 env/
 venv/
+venv*/
+node_modules/
+.env
+__pycache__/
+*.pyc
+*.pkl
+*.pt
+*.h5
+huggingface/
+backend/huge_folder_or_files_you_dont_need/
+backend/venv
+backend/venv310
+venv
+venv310
+
+
 
 
