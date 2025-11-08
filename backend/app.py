@@ -20,7 +20,7 @@ try:
 except ImportError:
     from config import Config
     from models import db, User, Summary, SummaryHistory
-
+FRONTEND_ORIGIN = os.getenv("FRONTEND_ORIGIN", "http://localhost:5173")
 load_dotenv()
 
 print("PWD:", os.getcwd())
@@ -40,7 +40,14 @@ app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL") or "postg
 app.config["JWT_SECRET_KEY"] = os.environ.get("JWT_SECRET_KEY", "supersecret")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", "supersecretkey")
-CORS(app, resources={r"/api/*": {"origins": ["http://localhost:5173", "http://127.0.0.1:5173"]}}, supports_credentials=True)
+CORS(app, resources={r"/api/*": {
+    "origins": [
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "https://app-frontend-fd5v.onrender.com"
+    ]
+}}, supports_credentials=True)
+
 
 jwt = JWTManager(app)
 db.init_app(app)
@@ -121,14 +128,14 @@ def google_logged_in(blueprint, token):
     try:
         if not token:
             print("[ERROR] No token returned from Google")
-            return redirect("http://localhost:5173/oauth-callback?error=OAuthFailed")
+            return redirect(f"{FRONTEND_ORIGIN}/oauth-callback?error=OAuthFailed")
         # Google userinfo endpoint (with user access token)
         resp = blueprint.session.get("/oauth2/v2/userinfo")
         print("[DEBUG] Response status code:", resp.status_code)
         print("[DEBUG] resp.ok:", resp.ok)
         if not resp.ok:
             print("[ERROR] Failed to fetch userinfo:", resp.text)
-            return redirect("http://localhost:5173/oauth-callback?error=OAuthFailed")
+            return redirect(f"{FRONTEND_ORIGIN}/oauth-callback?error=OAuthFailed")
         user_info = resp.json()
         print("[DEBUG] User info payload:", user_info)
         oauth_id = user_info.get("id")
@@ -136,7 +143,7 @@ def google_logged_in(blueprint, token):
         name = user_info.get("name", "Google User")
         if not email or not oauth_id:
             print("[ERROR] Missing email or oauth_id in user info:", user_info)
-            return redirect("http://localhost:5173/oauth-callback?error=OAuthFailed")
+            return redirect(f"{FRONTEND_ORIGIN}/oauth-callback?error=OAuthFailed")
         user = get_or_create_oauth_user(oauth_id, email, name, "google")
         print("[DEBUG] Created or loaded user:", user)
         login_user(user)
@@ -146,13 +153,14 @@ def google_logged_in(blueprint, token):
         jwt_token = create_access_token(identity=str(user.id))
         print("[DEBUG] JWT token created:", jwt_token)
         # Redirect with JWT as a query param:
-        return redirect(f"http://localhost:5173/oauth-callback?jwt={jwt_token}")
+        return redirect(f"{FRONTEND_ORIGIN}/oauth-callback?jwt={jwt_token}")
     except Exception as ex:
         # This helps catch exceptions like bad credentials, HTTP errors, etc.
         import traceback
         print("[ERROR] Exception in google_logged_in:", ex)
         traceback.print_exc()
-        return redirect("http://localhost:5173/oauth-callback?error=OAuthFailed")
+        return redirect(f"{FRONTEND_ORIGIN}/oauth-callback?error=OAuthFailed")
+
 
 
 app.register_blueprint(google_bp, url_prefix="/api/oauth/google")
@@ -169,7 +177,7 @@ def catch_all_exceptions(e):
         or "CSRF" in str(e)
         or "state not equal" in str(e)
     ):
-        return redirect("http://localhost:5173/oauth-callback?error=OAuthFailed")
+        return redirect(f"{FRONTEND_ORIGIN}/oauth-callback?error=OAuthFailed")
     return jsonify({"msg": f"Server error: {str(e)}"}), 500
 
 @app.route('/api/protected')
