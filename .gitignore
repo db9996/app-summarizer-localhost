@@ -13,3 +13,8 @@ migrations/
 venv310/
 venv/
 .venv/
+huggingface/hub/
+*.pkl
+*.pt
+*.h5
+huggingface/

@@ -44,10 +44,11 @@ CORS(app, resources={r"/api/*": {
     "origins": [
         "http://localhost:5173",
         "http://127.0.0.1:5173",
+        "http://localhost:5174",
         "https://app-frontend-fd5v.onrender.com"
+        "https://app-backend1.onrender.com"
     ]
 }}, supports_credentials=True)
-
 
 jwt = JWTManager(app)
 db.init_app(app)
@@ -101,7 +102,7 @@ google_bp = make_google_blueprint(
         "https://www.googleapis.com/auth/userinfo.email",
         "openid"
     ],
-    redirect_url="http://localhost:5001/api/oauth/google/google/authorized"
+    redirect_url="http://app-backend1.onrender.com/api/oauth/google/google/authorized"
 )
 google_bp.authorization_url_params = {"prompt": "select_account"}
 
@@ -328,4 +329,7 @@ logging.basicConfig(filename="flask_error.log", level=logging.DEBUG)
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
-    app.run(host='0.0.0.0', port=5001, debug=False)
+    import os
+    port = int(os.environ.get("PORT", 5001))
+    app.run(host='0.0.0.0', port=port, debug=False)
+

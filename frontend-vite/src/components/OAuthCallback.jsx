@@ -16,7 +16,7 @@ function OAuthCallback({ onLogin }) {
 
     let errorTimeout;
     // Always check login by calling /api/whoami
-    fetch("http://localhost:5001/api/whoami", { 
+    fetch("http://app-backend1.onrender.com/api/whoami", { 
       credentials: "include",
       headers: jwtToken ? { Authorization: `Bearer ${jwtToken}` } : {}
     })
