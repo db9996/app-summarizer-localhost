@@ -56,16 +56,18 @@ function OAuthCallback({ onLogin }) {
     return <div>Signing you in…</div>;
   }
 
-  if (user) {
-    return (
-      <div>
-        <h2>Google Login Successful!</h2>
-        <p>Welcome, {user.email}.</p>
-        {/* Redirect/navigate, or let user continue */}
-        <button onClick={() => navigate("/summarizer")}>Continue</button>
-      </div>
-    );
-  }
+if (user) {
+  // Redirect automatically
+  useEffect(() => {
+    navigate("/summarizer");
+  }, [navigate]);
+  return (
+    <div>
+      <h2>Google Login Successful!</h2>
+      <p>Welcome, {user.email}. Redirecting…</p>
+    </div>
+  );
+}
 
   if (error) {
     return (

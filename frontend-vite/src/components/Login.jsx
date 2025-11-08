@@ -18,13 +18,12 @@ function Login({ onLogin, goToSignup }) {
       return;
     }
     try {
-      const response = await api.post("/login", {
+      const response = await api.post("https://app-backend1.onrender.com/api/login", {
         username,
         password,
       });
       const token = response.data.token;
       localStorage.setItem("token", token);
-      alert("Login successful! JWT saved.");
       if (onLogin) onLogin(token);
     } catch (err) {
       setError(err.response?.data?.msg || "Login failed");

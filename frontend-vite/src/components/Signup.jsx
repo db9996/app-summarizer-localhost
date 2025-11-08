@@ -8,18 +8,20 @@ function Signup({ onSignup, goToLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setSuccess("");
     try {
-      const response = await api.post("/signup", {
+      const response = await api.post("https://app-backend1.onrender.com/api/signup", {
         username,
         email,
         password,
       });
-      alert("Signup successful! Please login.");
-      if (onSignup) onSignup();
+      setSuccess("Signup successful! Please login.");
+      if (onSignup) onSignup(); // This will navigate to login
     } catch (err) {
       setError(err.response?.data?.msg || "Signup failed");
     }
@@ -74,6 +76,7 @@ function Signup({ onSignup, goToLogin }) {
           </div>
           <button type="submit">Sign Up</button>
           {error && <div className="signup-error">{error}</div>}
+          {success && <div className="signup-success">{success}</div>}
         </form>
         <div className="signup-login">
           Already have an account?{" "}

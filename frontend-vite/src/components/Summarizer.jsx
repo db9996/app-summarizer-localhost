@@ -7,14 +7,17 @@ function Summarizer() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Poll status - now uses your api instance!
-  const pollTaskStatus = async (taskId) => {
+  // Poll status with token for auth
+  const pollTaskStatus = async (taskId, token) => {
     let done = false;
     let response = null;
     while (!done) {
       await new Promise((res) => setTimeout(res, 1500));
       try {
-        response = await api.get(`/task/${taskId}`); // Use api, not axios!
+        response = await api.get(
+          `/task/${taskId}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
         if (response.data.state === "SUCCESS") {
           done = true;
         } else if (response.data.state === "FAILURE") {
@@ -29,16 +32,21 @@ function Summarizer() {
     return response?.data?.summary || "";
   };
 
-  // Submission - uses api instance!
+  // Submission now sends JWT in headers
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSummary("");
     setError("");
     setLoading(true);
     try {
-      const response = await api.post("/summarize", { text: textOrUrl }); // Use api!
+      const token = localStorage.getItem("token");
+      const response = await api.post(
+        "https://app-backend1.onrender.com/api/summarize",
+        { text: textOrUrl },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
       const taskId = response.data.task_id;
-      const finalSummary = await pollTaskStatus(taskId);
+      const finalSummary = await pollTaskStatus(taskId, token);
       setSummary(finalSummary);
     } catch (err) {
       setError(err.response?.data?.msg || "Failed to summarize");
