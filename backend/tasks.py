@@ -3,13 +3,10 @@ import re
 from dotenv import load_dotenv
 from celery import Celery
 import google.generativeai as genai
- # this should still work IF you run celery from inside the backend dir
 import sys
 sys.path.append('/app')  # ensures correct import in Docker
-from app import app
-from models import db, User, Summary, SummaryHistory
-
-
+from backend.app import app as flask_app   # <--- KEY FIX: import flask app as flask_app
+from backend.models import db, User, Summary, SummaryHistory
 
 # Load environment variables
 load_dotenv()
@@ -62,9 +59,10 @@ def summarize_large_text(text):
         final_prompt = "Summarize the following collection of summaries:\n" + " ".join(summaries)
         print("Generating final summary from partial summaries")
         return generate_summary(final_prompt)
+
 @celery.task
 def my_summarize_task(text, summary_id):
-    with app.app_context():   # <--- fix is here!
+    with flask_app.app_context():   # <--- KEY FIX: use flask_app here!
         print("Received text:")
         print(repr(text))
         summary = summarize_large_text(text)
@@ -76,3 +74,6 @@ def my_summarize_task(text, summary_id):
             record.summary = summary
             db.session.commit()
         return summary
+
+# Celery needs to find the app with -A, so add this at the end:
+app = celery

@@ -14,13 +14,14 @@ from dotenv import load_dotenv
 from datetime import datetime
 from flask_session import Session
 from flask_dance.consumer import oauth_authorized
+from werkzeug.middleware.proxy_fix import ProxyFix
 try:
     from .config import Config
     from .models import db, User, Summary, SummaryHistory
 except ImportError:
     from config import Config
     from models import db, User, Summary, SummaryHistory
-    from werkzeug.middleware.proxy_fix import ProxyFix
+
 
 FRONTEND_ORIGIN = os.getenv("FRONTEND_ORIGIN", "http://localhost:5173")
 load_dotenv()
