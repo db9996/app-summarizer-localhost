@@ -8,7 +8,7 @@ A full-stack, production-ready summarization web app with:
 
 ---
 
-## 🚀 Features
+##  Features
 
 - **Secure authentication** via JWT and/or Google OAuth
 - **AI-powered text & URL summarizer** (async background processing)
@@ -18,7 +18,7 @@ A full-stack, production-ready summarization web app with:
 
 ---
 
-## 🗂️ Project Structure
+## Project Structure
 app-summarizer-final/
 │
 ├── backend/ # Flask app, Celery worker, requirements.txt, Dockerfile
@@ -37,12 +37,7 @@ app-summarizer-final/
 
 ---
 
-## 🌳 Tech Stack
-
-
----
-
-## 🌳 Tech Stack
+##  Tech Stack
 
 | Area      | Technology                                        |
 |-----------|---------------------------------------------------|
@@ -54,7 +49,7 @@ app-summarizer-final/
 
 ---
 
-## 🛠️ Getting Started
+##  Getting Started
 
 ### Prerequisites
 
@@ -68,7 +63,7 @@ app-summarizer-final/
 
 ---
 
-## 🛠️ Getting Started
+##  Getting Started
 
 ### Prerequisites
 
@@ -105,7 +100,7 @@ docker-compose up --build
 
 ---
 
-## 🖥️ Usage
+##  Usage
 
 1. Visit [http://localhost:5173](http://localhost:5173)
 2. Sign up or log in (via JWT or Google OAuth)
@@ -115,7 +110,7 @@ docker-compose up --build
 
 ---
 
-## ⚙️ Environment Variables
+##  Environment Variables
 
 - `DATABASE_URL` - PostgreSQL connection string
 - `JWT_SECRET_KEY` - JWT signing key
@@ -127,7 +122,7 @@ Set these either in `.env` files or as environment variables.
 
 ---
 
-## 🌐 Main API Endpoints
+##  Main API Endpoints
 
 - `POST /api/signup`: Register new users
 - `POST /api/login`: Login, returns JWT
@@ -136,7 +131,7 @@ Set these either in `.env` files or as environment variables.
 
 ---
 
-## 📅 Project Timeline (Example)
+## Project Timeline (Example)
 
 | Day      | Task                                    | Deliverable                      |
 |----------|-----------------------------------------|----------------------------------|
@@ -147,7 +142,7 @@ Set these either in `.env` files or as environment variables.
 
 ---
 
-## 🛡️ Troubleshooting
+##  Troubleshooting
 
 - **Too many redirects?** — Clear cookies, check OAuth, or JWT auth setup.
 - **Google OAuth `invalid_scope`?** — Use `https://` scopes, not `http://`.
@@ -157,7 +152,7 @@ Set these either in `.env` files or as environment variables.
 ---
 
 
-## 📝 Appendix: Extended Features / Future Work
+##  Appendix: Extended Features / Future Work
 
 - NLP model integration
 - User organization roles
