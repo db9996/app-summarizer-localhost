@@ -8,9 +8,9 @@ RUN apt-get update && apt-get install -y gcc
 
 # Only copy requirements (faster build, small context)
 COPY backend/requirements.txt .
-
 RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN pip install --default-timeout=100 --retries 5 -r requirements.txt
+
 
 # Only copy backend code (not the full repo!)
 COPY backend/ .
