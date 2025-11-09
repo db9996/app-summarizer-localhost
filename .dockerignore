@@ -35,6 +35,19 @@ backend/venv
 backend/venv310
 venv
 venv310
+# Ignore all these folders/files to shrink Docker build context!
+node_modules
+frontend-vite/node_modules
+*.env
+*.pyc
+__pycache__
+.git
+.DS_Store
+tests
+*.log
+.vscode
+.envrc
+*.sqlite3
 
 
 
