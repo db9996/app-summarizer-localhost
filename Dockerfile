@@ -13,7 +13,7 @@ RUN pip install --default-timeout=100 --retries 5 -r requirements.txt
 
 
 # Only copy backend code (not the full repo!)
-COPY backend/ .
+COPY backend /app/backend
 
 # Expose port if needed by Flask (Celery doesn't need it, harmless)
 # Start Celery worker

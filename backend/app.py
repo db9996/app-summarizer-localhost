@@ -15,6 +15,7 @@ from datetime import datetime
 from flask_session import Session
 from flask_dance.consumer import oauth_authorized
 from werkzeug.middleware.proxy_fix import ProxyFix
+from app import app
 try:
     from .config import Config
     from .models import db, User, Summary, SummaryHistory
