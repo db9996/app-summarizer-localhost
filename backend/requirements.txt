@@ -17,3 +17,4 @@ celery
 redis
 google-generativeai
 Flask-Session
+flask-cors

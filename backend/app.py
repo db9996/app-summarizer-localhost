@@ -49,7 +49,7 @@ CORS(app, resources={r"/api/*": {
         "http://localhost:5173",
         "http://127.0.0.1:5173",
         "http://localhost:5174",
-        "https://app-frontend-fd5v.onrender.com",
+        "https://frontend-vite-bo2r.onrender.com",
         "https://app-backend1.onrender.com"
     ]
 }}, supports_credentials=True)
