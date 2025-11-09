@@ -37,6 +37,7 @@ venv/
 venv*/
 env/
 env*/
+ven310/
 
 # Ignore backend-local
 backend/venv/

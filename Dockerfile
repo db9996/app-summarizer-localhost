@@ -7,9 +7,9 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y gcc
 
 # Only copy requirements (faster build, small context)
-COPY backend/requirements.txt .
+COPY backend/requirements.txt backend/requirements.txt
 RUN pip install --upgrade pip
-RUN pip install --default-timeout=100 --retries 5 -r requirements.txt
+RUN pip install -r backend/requirements.txt
 
 
 # Only copy backend code (not the full repo!)
