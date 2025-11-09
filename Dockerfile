@@ -16,11 +16,5 @@ RUN pip install --default-timeout=100 --retries 5 -r requirements.txt
 COPY backend/ .
 
 # Expose port if needed by Flask (Celery doesn't need it, harmless)
-EXPOSE 5001
-
-# Environment variables (required if your celery tasks use Flask context)
-ENV FLASK_APP=app
-ENV FLASK_ENV=production
-
 # Start Celery worker
 CMD ["celery", "-A", "tasks", "worker", "--loglevel=info"]
