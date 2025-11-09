@@ -20,6 +20,8 @@ try:
 except ImportError:
     from config import Config
     from models import db, User, Summary, SummaryHistory
+    from werkzeug.middleware.proxy_fix import ProxyFix
+
 FRONTEND_ORIGIN = os.getenv("FRONTEND_ORIGIN", "http://localhost:5173")
 load_dotenv()
 
@@ -36,6 +38,7 @@ print("Google Client ID:", os.getenv("GOOGLE_OAUTH_CLIENT_ID"))
 
 app = Flask(__name__)
 app.config.from_object(Config)
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1)
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL") or "postgresql://db9996:Devu2021@db:5432/appsummarizer2"
 app.config["JWT_SECRET_KEY"] = os.environ.get("JWT_SECRET_KEY", "supersecret")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -68,6 +71,15 @@ class Config:
     CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL") or "redis://localhost:6380/0"
     CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND") or "redis://localhost:6380/0"
 app.config.from_object(Config)
+
+from flask import request, redirect
+
+@app.before_request
+def enforce_https_in_oauth():
+    if request.path.startswith("/api/oauth/") and not request.is_secure:
+        url = request.url.replace("http://", "https://", 1)
+        return redirect(url, code=302)
+
 
 @login_manager.user_loader
 def load_user(user_id):
