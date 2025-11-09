@@ -7,6 +7,7 @@ import sys
 sys.path.append('/app')  # ensures correct import in Docker
 from app import app as flask_app   # <--- KEY FIX: import flask app as flask_app
 from models import db, User, Summary, SummaryHistory
+from app import app
 
 # Load environment variables
 load_dotenv()
