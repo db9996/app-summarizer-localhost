@@ -146,6 +146,10 @@ function AppWrapper() {
                 element={<History />}
               />
               {/* NO "/" route for logged-in users */}
+              <Route
+                path="*"
+                element={<Summarizer/>}
+              />
             </>
           )}
         </Routes>
