@@ -18,3 +18,5 @@ huggingface/hub/
 *.pt
 *.h5
 huggingface/
+backend/flask_error.log
+backend/flask_error.log
