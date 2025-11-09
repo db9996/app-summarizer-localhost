@@ -4,6 +4,8 @@ from dotenv import load_dotenv
 from celery import Celery
 import google.generativeai as genai
 import sys
+import logging
+
 sys.path.append('/app')  # ensures correct import in Docker
 from app import app as flask_app   # <--- KEY FIX: import flask app as flask_app
 from models import db, User, Summary, SummaryHistory
@@ -14,6 +16,10 @@ load_dotenv()
 
 # Configure Celery with Redis broker/backend
 celery = Celery("tasks", broker="redis://localhost:6380/0", backend="redis://localhost:6380/0")
+
+# Setup logging for Celery tasks
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)  # Configure root logger level
 
 # Initialize Gemini client
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
@@ -33,14 +39,16 @@ def chunk_text(text, chunk_size=4000):
         chunks.append(current.strip())
     return chunks
 
+
 def generate_summary(prompt):
     try:
         response = client.generate_content(prompt)
-        print("Gemini RAW response:", response)
+        logger.info("Gemini RAW response: %s", response)
         return response.text.strip()
     except Exception as e:
-        print(f"Error during summary: {e}")
+        logger.error("Error during summary: %s", e)
         return "Error: Unable to generate summary."
+
 
 def summarize_large_text(text):
     # Use chunking for very large input, else summarize directly
@@ -49,32 +57,34 @@ def summarize_large_text(text):
         return generate_summary(f"Summarize the following text:\n{text}")
     else:
         chunks = chunk_text(text, chunk_size=chunk_size)
-        print(f"Input split into {len(chunks)} chunks.")
+        logger.info(f"Input split into {len(chunks)} chunks.")
         summaries = []
         for i, chunk in enumerate(chunks):
-            print(f"Summarizing chunk {i + 1}/{len(chunks)}")
+            logger.info(f"Summarizing chunk {i + 1}/{len(chunks)}")
             prompt = f"Summarize the following paragraph:\n{chunk}"
             summary = generate_summary(prompt)
-            print(f"Chunk {i + 1} summary: {summary}")
+            logger.info(f"Chunk {i + 1} summary: {summary}")
             summaries.append(summary)
         final_prompt = "Summarize the following collection of summaries:\n" + " ".join(summaries)
-        print("Generating final summary from partial summaries")
+        logger.info("Generating final summary from partial summaries")
         return generate_summary(final_prompt)
+
 
 @celery.task
 def my_summarize_task(text, summary_id):
     with flask_app.app_context():   # <--- KEY FIX: use flask_app here!
-        print("Received text:")
-        print(repr(text))
+        logger.info("Received text:")
+        logger.info(repr(text))
         summary = summarize_large_text(text)
-        print("Summary:")
-        print(summary)
+        logger.info("Summary:")
+        logger.info(summary)
         # Save summary to DB
         record = Summary.query.get(summary_id)
         if record:
             record.summary = summary
             db.session.commit()
         return summary
+
 
 # Celery needs to find the app with -A, so add this at the end:
 app = celery

@@ -21,7 +21,7 @@ services:
       - db
       - redis
     environment:
-      DATABASE_URL: postgresql://db9996:Devu2021@db:5432/appsummarizer2
+      DATABASE_URL: postgresql://db9996:Devu2021@localhost:5432/appsummarizer2
       CELERY_BROKER_URL: redis://redis:6379/0
       CELERY_RESULT_BACKEND: redis://redis:6379/0
       FLASK_APP: app
@@ -38,7 +38,7 @@ services:
       - backend
       - redis
     environment:
-      DATABASE_URL: postgresql://db9996:Devu2021@db:5432/appsummarizer2
+      DATABASE_URL: postgresql://db9996:Devu2021@localhost:5432/appsummarizer2
       CELERY_BROKER_URL: redis://redis:6379/0
       CELERY_RESULT_BACKEND: redis://redis:6379/0
       FLASK_APP: app

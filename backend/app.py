@@ -40,7 +40,7 @@ print("Google Client ID:", os.getenv("GOOGLE_OAUTH_CLIENT_ID"))
 app = Flask(__name__)
 app.config.from_object(Config)
 app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1)
-app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL") or "postgresql://db9996:Devu2021@db:5432/appsummarizer2"
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL") or "postgresql://db9996:Devu2021@localhost:5432/appsummarizer2"
 app.config["JWT_SECRET_KEY"] = os.environ.get("JWT_SECRET_KEY", "supersecret")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", "supersecretkey")
@@ -49,8 +49,8 @@ CORS(app, resources={r"/api/*": {
         "http://localhost:5173",
         "http://127.0.0.1:5173",
         "http://localhost:5174",
-        "https://frontend-vite-bo2r.onrender.com",
-        "https://app-backend1.onrender.com"
+        "http://frontend-vite-bo2r.onrender.com",
+        "http://localhost:5001"
     ]
 }}, supports_credentials=True)
 
@@ -66,7 +66,7 @@ class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY") or "supersecret"
     JWT_SECRET_KEY = os.environ.get("JWT_SECRET_KEY") or "superjwtsecret"
     SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL") or \
-        "postgresql://db9996:Devu2021@db:5432/appsummarizer2"
+        "postgresql://db9996:Devu2021@localhost:5432/appsummarizer2"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     CORS_HEADERS = "Content-Type"
     CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL") or "redis://localhost:6380/0"
@@ -75,11 +75,11 @@ app.config.from_object(Config)
 
 from flask import request, redirect
 
-@app.before_request
-def enforce_https_in_oauth():
-    if request.path.startswith("/api/oauth/") and not request.is_secure:
-        url = request.url.replace("http://", "https://", 1)
-        return redirect(url, code=302)
+#@app.before_request
+#def enforce_http_in_oauth():
+#    if request.path.startswith("/api/oauth/") and not request.is_secure:
+#        url = request.url.replace("http://", "http://", 1)
+#        return redirect(url, code=302)
 
 
 @login_manager.user_loader
@@ -115,7 +115,7 @@ google_bp = make_google_blueprint(
         "https://www.googleapis.com/auth/userinfo.email",
         "openid"
     ],
-    redirect_url="https://app-backend1.onrender.com/api/oauth/google/google/authorized"
+    redirect_url="http://localhost:5001/api/oauth/google/google/authorized"
 )
 google_bp.authorization_url_params = {"prompt": "select_account"}
 
@@ -241,8 +241,10 @@ def login():
 @api_bp.route("/summarize", methods=["POST"])
 @jwt_required()
 def summarize_post():
+    print("API endpoint hit!")
     try:
         data = request.get_json(force=True, silent=True)
+        print("Parsed input:", data)
         if not (isinstance(data, dict) and "text" in data and isinstance(data["text"], str)):
             return jsonify({"msg": "Bad input: request body must be JSON with 'text' string"}), 400
         text = data["text"]
@@ -251,7 +253,9 @@ def summarize_post():
         summary = Summary(text=text, summary="", user_id=user_id)
         db.session.add(summary)
         db.session.commit()
+        print("Dispatching celery task!")
         task = my_summarize_task.apply_async(args=[text, summary.id])
+        print(f"Task dispatched: {task.id}")
         return jsonify({"task_id": task.id, "summary_id": summary.id}), 202
     except Exception as e:
         traceback.print_exc()
@@ -343,6 +347,6 @@ if __name__ == "__main__":
     with app.app_context():
         db.create_all()
     import os
-    port = int(os.environ.get("PORT", 5000))
+    port = int(os.environ.get("PORT", 5001))
     app.run(host='0.0.0.0', port=port, debug=False)
 

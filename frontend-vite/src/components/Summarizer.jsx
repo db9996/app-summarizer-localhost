@@ -41,7 +41,7 @@ function Summarizer() {
     try {
       const token = localStorage.getItem("token");
       const response = await api.post(
-        "https://app-backend1.onrender.com/api/summarize",
+        "http://localhost:5001/api/summarize",
         { text: textOrUrl },
         { headers: { Authorization: `Bearer ${token}` } }
       );

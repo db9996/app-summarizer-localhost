@@ -1,7 +1,7 @@
 import { useState } from "react";
 import api from "../api/axios";
 
-const GOOGLE_AUTH_URL = "https://app-backend1.onrender.com/api/oauth/google/google";
+const GOOGLE_AUTH_URL = "http://localhost:5001/api/oauth/google/google";
 
 
 function Login({ onLogin, goToSignup }) {
@@ -18,7 +18,7 @@ function Login({ onLogin, goToSignup }) {
       return;
     }
     try {
-      const response = await api.post("https://app-backend1.onrender.com/api/login", {
+      const response = await api.post("http://localhost:5001/api/login", {
         username,
         password,
       });
