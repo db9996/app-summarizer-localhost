@@ -3,7 +3,7 @@
 A full-stack, production-ready summarization web app with:
 
 - **Backend:** Flask, SQLAlchemy, PostgreSQL, JWT Authentication, Celery, Redis (async tasks)
-- **Frontend:** React (Vite), Axios, Tailwind CSS
+- **Frontend:** React (Vite), Axios, CSS
 - **Infrastructure:** Docker, Docker Compose
 
 ---
