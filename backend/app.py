@@ -49,9 +49,9 @@ CORS(app, resources={r"/api/*": {
         "http://localhost:3000",
         "http://localhost:5173",
         "http://127.0.0.1:5173",
-        "http://localhost:5174",
         "http://frontend-vite-bo2r.onrender.com",
-        "http://localhost:5001"
+        "http://localhost:5001",
+        "https://app-summarizer-frontend.netlify.app"
     ]
 }}, supports_credentials=True)
 
@@ -116,7 +116,7 @@ google_bp = make_google_blueprint(
         "https://www.googleapis.com/auth/userinfo.email",
         "openid"
     ],
-    redirect_url="http://localhost:5001/api/oauth/google/google/authorized"
+    redirect_url="https://app-summarizer-localhost-production.up.railway.app/api/oauth/google/google/authorized"
 )
 google_bp.authorization_url_params = {"prompt": "select_account"}
 
@@ -350,4 +350,5 @@ if __name__ == "__main__":
     import os
     port = int(os.environ.get("PORT", 5001))
     app.run(host='0.0.0.0', port=port, debug=False)
+
 
