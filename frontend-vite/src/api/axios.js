@@ -2,8 +2,8 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "/api",
-  withCredentials: true // doesn't hurt for local
+  baseURL: import.meta.env.VITE_BACKEND_URL + "/api",
+  withCredentials: true
 });
 
 api.interceptors.request.use(
