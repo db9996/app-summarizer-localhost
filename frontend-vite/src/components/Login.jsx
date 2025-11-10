@@ -1,7 +1,9 @@
 import { useState } from "react";
 import api from "../api/axios";
 
-const GOOGLE_AUTH_URL = "http://localhost:5001/api/oauth/google/google";
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL;
+const GOOGLE_AUTH_URL = `${API_BASE_URL}/api/oauth/google/google`;
+
 
 
 function Login({ onLogin, goToSignup }) {
@@ -18,7 +20,7 @@ function Login({ onLogin, goToSignup }) {
       return;
     }
     try {
-      const response = await api.post("http://localhost:5001/api/login", {
+      const response = await api.post(`${API_BASE_URL}/api/login`, {
         username,
         password,
       });
