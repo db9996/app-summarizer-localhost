@@ -19,6 +19,6 @@ ENV FLASK_ENV=production
 EXPOSE 5001
 
 # CMD for development (remove/rewrite if using gunicorn for prod)
-CMD ["gunicorn", "-b", "0.0.0.0:5001", "app:app"]
+#CMD ["gunicorn", "-b", "0.0.0.0:5001", "app:app"]
 # For gunicorn production:
 # CMD ["gunicorn", "-b", "0.0.0.0:5001", "app:app"]
