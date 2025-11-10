@@ -20,7 +20,7 @@ function Login({ onLogin, goToSignup }) {
       return;
     }
     try {
-      const response = await api.post(`${API_BASE_URL}/api/login`, {
+      const response = await api.post("/api/login", {
         username,
         password,
       });
