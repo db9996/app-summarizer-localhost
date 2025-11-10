@@ -15,7 +15,11 @@ from app import app
 load_dotenv()
 
 # Configure Celery with Redis broker/backend
-celery = Celery("tasks", broker="redis://localhost:6380/0", backend="redis://localhost:6380/0")
+celery = Celery(
+    "tasks",
+    broker=os.getenv("CELERY_BROKER_URL"),
+    backend=os.getenv("CELERY_RESULT_BACKEND")
+)
 
 # Setup logging for Celery tasks
 logger = logging.getLogger(__name__)
