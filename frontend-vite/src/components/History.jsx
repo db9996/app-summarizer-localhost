@@ -29,7 +29,7 @@ function History() {
       setLoading(true);
       setError("");
       try {
-        const response = await api.get("http://localhost:5001/api/summaries"); // Always GET
+        const response = await api.get("/summaries"); // Always GET
         setSummaries(response.data);
       } catch (err) {
         setError(err.response?.data?.msg || "Failed to load summaries.");
