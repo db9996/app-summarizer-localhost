@@ -22,8 +22,6 @@ except ImportError:
     from config import Config
     from models import db, User, Summary, SummaryHistory
 
-
-FRONTEND_ORIGIN = os.getenv("FRONTEND_ORIGIN", "http://localhost:5173")
 load_dotenv()
 
 print("PWD:", os.getcwd())
@@ -351,6 +349,7 @@ if __name__ == "__main__":
     import os
     port = int(os.environ.get("PORT", 5001))
     app.run(host='0.0.0.0', port=port, debug=False)
+
 
 
 
