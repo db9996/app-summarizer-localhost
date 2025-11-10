@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../api/axios";
 
 function Dashboard() {
   const [data, setData] = useState(null);
@@ -10,7 +10,7 @@ function Dashboard() {
 
     async function fetchProtectedData() {
       try {
-        const response = await axios.get(`${API_BASE_URL}/api/protected`, {
+        const response = await axios.get("/api/protected", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
