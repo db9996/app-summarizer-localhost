@@ -10,7 +10,7 @@ function Dashboard() {
 
     async function fetchProtectedData() {
       try {
-        const response = await axios.get("http://localhost:5001/api/protected", {
+        const response = await axios.get(`${API_BASE_URL}/api/protected`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
