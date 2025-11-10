@@ -41,7 +41,7 @@ function Summarizer() {
     try {
       const token = localStorage.getItem("token");
       const response = await api.post(
-        "http://localhost:5001/api/summarize",
+        "/api/summarize",
         { text: textOrUrl },
         { headers: { Authorization: `Bearer ${token}` } }
       );
