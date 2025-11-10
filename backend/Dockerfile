@@ -7,12 +7,9 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y gcc
 
 # Copy requirements and install
-COPY requirements.txt .
+COPY backend/requirements.txt .
 RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
-
-
-# Copy app code
-COPY . .
+COPY backend /app
 
 # Set environment variables
 ENV FLASK_APP=app
