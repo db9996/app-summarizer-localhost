@@ -21,6 +21,8 @@ try:
 except ImportError:
     from config import Config
     from models import db, User, Summary, SummaryHistory
+    
+FRONTEND_ORIGIN = os.getenv("FRONTEND_ORIGIN", "http://localhost:5173")    
 
 load_dotenv()
 
@@ -70,7 +72,6 @@ class Config:
     CORS_HEADERS = "Content-Type"
     CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL") or "redis://localhost:6380/0"
     CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND") or "redis://localhost:6380/0"
-    FRONTEND_ORIGIN = os.getenv("FRONTEND_ORIGIN", "http://localhost:5173")
 app.config.from_object(Config)
 
 from flask import request, redirect
