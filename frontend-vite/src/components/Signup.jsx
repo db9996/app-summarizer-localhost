@@ -17,7 +17,7 @@ function Signup({ onSignup, goToLogin }) {
     setError("");
     setSuccess("");
     try {
-      const response = await api.post("api/signup", {
+      const response = await api.post("/api/signup", {
         username,
         email,
         password,
