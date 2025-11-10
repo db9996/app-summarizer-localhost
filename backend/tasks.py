@@ -90,5 +90,4 @@ def my_summarize_task(text, summary_id):
         return summary
 
 
-# Celery needs to find the app with -A, so add this at the end:
-app = celery
+
